@@ -1,1 +1,51 @@
-Hier könnten Ihre Lösungen stehen...
+Rechnernetze, Übungsblatt 5
+Elena Schweitzer, 1700443
+
+Aufgabe 2: SSH Login mit Schlüsselpaar
+	Was hat sich verändert?
+	    Man wird beim Anmelden nicht mehr nach seinem Passwort gefragt. Stattdessen nutzt SSH
+	    automatisch einen privaten Schlüssel auf dem Rechner. Dadurch klappt die Anmeldung
+	    direkt und ohne zusätzliche Eingabe.
+	Warum ist das sicherer?
+	    Der private Schlüssel bleibt nur auf dem eigenen Computer und wird nicht übertragen.
+	    Außerdem sind SSH-Schlüssel viel schwerer zu knacken als normale Passwörter. Dadurch sind
+	    Angriffe wie Brute-Force praktisch nicht sinnvoll.
+
+Aufgabe 3: SSH Basics und Nutzerberechtigungen
+a)	mkdir ~/1
+	mkdir ~/2
+b)	echo "Das ist eine Testdatei" > test.txt
+	scp test.txt s4elschw@2026s.ag-syssoft.org:~/1/
+c)	cd ~/2
+	nano script.sh
+	Inhalt der Datei:
+		#!/bin/bash
+		echo "Hallo Welt"
+	./script.sh
+d)	chmod 751 script.sh
+	ls -l script.sh -> -rwxr-x--x 1 s4elschw s4elschw 30 Jun 16 14:55 script.sh
+	Erklärung der Berechtigungen:
+		rwx = Besitzer darf lesen, schreiben und ausführen
+		r-x = Gruppenmitglieder dürfen lesen und ausführen
+		r-- = andere Nutzer dürfen nur lesen
+		Die Änderungen erkennt man an den Buchstaben in der ls -l Ausgabe:
+			r = read
+			w = write
+			x = execute
+
+Aufgabe 4: Dateidownload per SSH
+	cd ~
+	curl -o FPO2020.pdf https://ordnungen.uni-trier.de/FPO_BSc_1F-HF-NF_Informatik_2020-07-27.pdf
+	ls -l FPO2020.pdf
+
+Aufgabe 5: SSH Portweiterleitung (Tunneling)
+	Vorgehen
+	    Die SSH-Verbindung wurde mit lokaler Portweiterleitung aufgebaut:
+		    ssh -L 8080:localhost:3000 s4elschw@2026s.ag-syssoft.org
+	    Anschließend konnte der Webserver im Browser unter http://localhost:8080 aufgerufen werden.
+	Datenfluss
+	    Die Anfrage wird vom Browser an den lokalen Port 8080 gesendet.
+	    Dieser wird durch den SSH-Tunnel verschlüsselt an den Server weitergeleitet und dort an
+	    den Webserver auf Port 3000 übergeben. Die Antwort des Servers wird über denselben Tunnel
+	    zurück an den lokalen Rechner geleitet und im Browser angezeigt.
+
